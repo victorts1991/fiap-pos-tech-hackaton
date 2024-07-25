@@ -13,7 +13,7 @@ data "aws_eks_cluster_auth" "cluster" {
 }
 
 locals {
-  cluster_name = "fiap-tech-challenge-infra-k8s"
+  cluster_name = "fiap-pos-tech-hackaton"
 }
 
 provider "kubernetes" {

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-hackaton-deployment
+spec:
+  template:
+    metadata:
+      name: api-hackaton
+      labels: 
+        app: api-hackaton
+    spec:
+      containers:
+        - name: api-hackaton-container
+          image: $ECR_REPOSITORY
+          resources:
+            limits:
+              cpu: "0.1"
+              memory: "512Mi"          
+            requests:
+              cpu: "0.1"
+              memory: "512Mi"
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: 3000
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 20
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-hackaton          
+

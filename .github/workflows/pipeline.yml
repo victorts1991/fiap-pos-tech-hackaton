@@ -8,6 +8,8 @@ on:
 
 jobs:
  
+  # adicionar aqui antes de tudo unit tests e sonar qube
+
   setup-terraform:
     
     runs-on: ubuntu-latest
@@ -52,4 +54,56 @@ jobs:
       run: terraform apply -auto-approve
       continue-on-error: true
 
-  
+  docker-push-and-setup-kubernetes:
+
+    runs-on: ubuntu-latest    
+    needs: setup-terraform
+    steps:
+            
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
+        mask-aws-account-id: 'no'
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1    
+
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: fiap-pos-tech-hackaton
+        IMAGE_TAG: latest
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+ 
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      id: install-kubectl
+
+    - name: Update KubeConfig
+      shell: bash
+      run: |
+        aws eks update-kubeconfig --name fiap-pos-tech-hackaton --region=us-east-2 
+
+    - name: Deploy API 
+      id: deploy-api
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      run: |        
+        export ECR_REPOSITORY=${{ env.ECR_REGISTRY }}/fiap-pos-tech-hackaton:latest
+        cd ./kubernetes/metrics-server
+        kubectl apply -f components.yaml
+        cd ../
+        envsubst < api-deployment.yaml | kubectl apply -f -
+        kubectl apply -f api-hpa.yaml
+        kubectl apply -f api-svc.yaml
+        kubectl rollout restart deployment api-hackaton-deployment
+
