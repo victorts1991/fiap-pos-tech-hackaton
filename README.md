@@ -18,6 +18,12 @@ Abaixo seguem os passos para a execução do projeto pelos professores da Fiap.
 14. Copie os valores dos campos "Chave de acesso" e "Chave de acesso secreta";
 15. Na plataforma do Github, acesse o menu "Settings" do projeto, na tela que se abrir, clique no menu Security->Secrets and variables->Actions;
 16. Adicione uma "repository secret" chamada AWS_ACCESS_KEY_ID com o valor copiado de "Chave de acesso", e crie outra "repository secret" chamada AWS_SECRET_ACCESS_KEY com o valor copiado de "Chave de acesso secreta";
+
+
+********************
+
+
+
 17. Vincule este projeto no Sonar Cloud:
 ```
 https://sonarcloud.io/
