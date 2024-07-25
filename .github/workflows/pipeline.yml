@@ -9,9 +9,10 @@ on:
 jobs:
  
   setup-terraform:
-
-    runs-on: ubuntu-latest
     
+    runs-on: ubuntu-latest
+    env:
+      working-directory: terraform
     steps:
             
     - name: Check out code
@@ -26,10 +27,6 @@ jobs:
         
     - name: Setup Terraform CLI
       uses: hashicorp/setup-terraform@v2.0.2
-
-    - name: cd to terraform folder
-      id: cd-command
-      run: cd ./terraform
 
     - name: Terraform Init
       id: init
