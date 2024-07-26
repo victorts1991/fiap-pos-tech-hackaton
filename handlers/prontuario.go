@@ -1,11 +1,13 @@
 package handlers
 
 import (
-	"github.com/labstack/echo/v4"
-	"github.com/victorts1991/fiap-pos-tech-hackaton/models"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/labstack/echo/v4"
+
+	"github.com/victorts1991/fiap-pos-tech-hackaton/models"
 )
 
 var prontuarios = map[int]*models.Prontuario{}
@@ -28,8 +30,8 @@ func CreateProntuario(c echo.Context) error {
 	return c.JSON(http.StatusCreated, p)
 }
 
-func GetProntuario(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+func GetProntuarioByPacienteID(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("paciente_id"))
 	if p, ok := prontuarios[id]; ok {
 		return c.JSON(http.StatusOK, p)
 	}

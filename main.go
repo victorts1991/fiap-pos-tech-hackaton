@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
+	"github.com/victorts1991/fiap-pos-tech-hackaton/DI"
 	"github.com/victorts1991/fiap-pos-tech-hackaton/handlers"
 )
 
@@ -31,22 +32,26 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	//dependencies
+	dependencies := DI.NewDependencies()
+
 	// Routes
 	e.GET("/liveness", liveness)
-	e.POST("/login", handlers.Login)
-	e.GET("/pacientes/:cpf", handlers.GetPaciente)
+	e.POST("/login", dependencies.LoginHandler.LoginHandler)
+	e.GET("/pacientes/:cpf", dependencies.Token.PermissaoPaciente(dependencies.Token.VerifyToken(handlers.GetPaciente)))
 	e.GET("/medicos", handlers.GetMedicos)
-	//horario
+	//horarios
 	e.POST("/horarios", handlers.CreateHorario)
-	e.GET("/horarios/:medico_id", handlers.GetHorario)
+	e.GET("/horarios/:medico_id", handlers.GetHorarioByMedicoID)
 	e.PUT("/horarios/:id", handlers.UpdateHorario)
 	e.DELETE("/horarios/:id", handlers.DeleteHorario)
-	//prontuario
+	//prontuarios
 	e.POST("/prontuarios", handlers.CreateProntuario)
-	e.GET("/prontuarios/:id", handlers.GetProntuario)
+	e.GET("/prontuarios/:paciente_id", handlers.GetProntuarioByPacienteID)
 	e.PUT("/prontuarios/:id", handlers.UpdateProntuario)
 	e.DELETE("/prontuarios/:id", handlers.DeleteProntuario)
-	//consulta
+	//consultas
+	e.PATCH("/consultas/:id", handlers.AtualizaSolicitacaoConsulta)
 	e.POST("/consultas", handlers.CreateConsulta)
 	e.GET("/consultas/:id", handlers.GetConsulta)
 	e.PUT("/consultas/:id", handlers.UpdateConsulta)

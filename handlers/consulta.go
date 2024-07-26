@@ -1,27 +1,52 @@
 package handlers
 
 import (
-	"github.com/labstack/echo/v4"
-	"github.com/victorts1991/fiap-pos-tech-hackaton/models"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/labstack/echo/v4"
+
+	"github.com/victorts1991/fiap-pos-tech-hackaton/models"
 )
 
 var consultas = map[int]*models.Consulta{}
 
+func AtualizaSolicitacaoConsulta(c echo.Context) error {
+	con := models.Consulta{
+		ID:         len(consultas) + 1,
+		PacienteID: 1,
+		MedicoID:   1,
+		Horario: models.Horario{
+			ID:       1,
+			MedicoID: 1,
+			Data:     "2024-07-02T15:00",
+			Status:   "Confirmado",
+		},
+		Status:     "Agendada",
+		Observacao: "Consulta de rotina",
+		Link:       "https://meet.google.com/abc-def-ghi",
+		CreatedAt:  time.Now(),
+	}
+	return c.JSON(http.StatusCreated, con)
+}
+
 func CreateConsulta(c echo.Context) error {
-	var con models.Consulta
-	if err := c.Bind(&con); err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+	con := models.Consulta{
+		ID:         len(consultas) + 1,
+		PacienteID: 1,
+		MedicoID:   1,
+		Horario: models.Horario{
+			ID:       1,
+			MedicoID: 1,
+			Data:     "2024-07-02T15:00",
+			Status:   "Solicitado",
+		},
+		Status:     "Agendada",
+		Observacao: "Consulta de rotina",
+		Link:       "https://meet.google.com/abc-def-ghi",
+		CreatedAt:  time.Now(),
 	}
-	if err := c.Validate(&con); err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
-	}
-	con.ID = idCounter
-	con.CreatedAt = time.Now().Format(time.RFC3339)
-	consultas[con.ID] = &con
-	idCounter++
 	return c.JSON(http.StatusCreated, con)
 }
 
