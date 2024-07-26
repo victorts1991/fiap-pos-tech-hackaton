@@ -1,9 +1,12 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
 	"github.com/victorts1991/fiap-pos-tech-hackaton/handlers"
 )
 
@@ -29,6 +32,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// Routes
+	e.GET("/liveness", liveness)
 	e.POST("/login", handlers.Login)
 	e.GET("/pacientes/:cpf", handlers.GetPaciente)
 	e.GET("/medicos", handlers.GetMedicos)
@@ -59,4 +63,18 @@ type CustomValidator struct {
 // Validate implements the echo.Validator interface
 func (cv *CustomValidator) Validate(i interface{}) error {
 	return cv.validator.Struct(i)
+}
+
+// Liveness godoc
+// @Summary Show the status of http.
+// @Description get the status of http.
+// @Tags Health
+// @Accept */*
+// @Produce json
+// @Success 200 {string} string "token"
+// @Router /liveness [get]
+func liveness(c echo.Context) error {
+	response := make(map[string]bool)
+	response["status"] = true
+	return c.JSON(http.StatusOK, response)
 }
