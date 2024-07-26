@@ -99,7 +99,7 @@ jobs:
         cd ./kubernetes/metrics-server
         kubectl apply -f components.yaml
         cd ../
-        envsubst < api-deployment.yaml | kubectl apply -f -
-        kubectl apply -f api-hpa.yaml
-        kubectl apply -f api-svc.yaml
+        envsubst < deployment.yaml | kubectl apply -f -
+        kubectl apply -f hpa.yaml
+        kubectl apply -f svc.yaml
         kubectl rollout restart deployment api-hackaton-deployment
