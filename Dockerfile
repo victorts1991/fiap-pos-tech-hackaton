@@ -2,7 +2,9 @@ FROM golang:1.20-alpine3.17 as base
 
 RUN apk update
 WORKDIR /app/fiap_hackaton
-COPY go.mod go.sum ./
+# COPY go.mod go.sum ./
+
+COPY go.mod ./
 # separate in a sh file
 RUN go mod download
 COPY . .
