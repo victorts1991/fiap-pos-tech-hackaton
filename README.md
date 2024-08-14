@@ -1,5 +1,11 @@
 # Hackaton da Pós Tech em Arquitetura de Software da Fiap
 
+O Hackaton da Fiap consistia em grande parte apresentar a documentação de arquitetura e entregar minimamente um projeto onde fosse possível subir algo na nuvem através de CI/CD, meio que deixando preparado para continuação segundo eles, sendo assim, este repositório não tem por objetivo apresentar um projeto funcional e sim apenas algo que de para dar continuidade caso o projeto fosse avançar. Existia até a possibilidade de tentar fazer o projeto como um todo segundo os professores, mas com o escopo grande e apenas 2 semanas de prazo isso não foi possível.
+
+No mais este repositório é apenas um dos entregáveis do trabalho e a nota final da entrega foi:
+
+## 9.78
+
 Abaixo seguem os passos para a execução do projeto pelos professores da Fiap.
 
 1. Faça o login na plataforma da AWS;
